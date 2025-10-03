@@ -23,6 +23,12 @@ class Patient extends Model
         'birthdate'
     ];
 
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'patient_id');
+    }
+
+
     // Auto-generate patient_id when creating a new patient
     protected static function boot()
     {

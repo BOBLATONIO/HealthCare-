@@ -77,7 +77,7 @@
                     $start = max($end - 5, 1);
                     @endphp
                     @for($page = $start; $page <= $end; $page++) <a href="{{ $patients->url($page) }}"
-                        class="py-2 w-9 text-center text-sm font-normal {{ $patients->currentPage() == $page ? 'text-white bg-blue-800 border border-blue-800' : 'text-slate-500 bg-white border border-slate-200' }} rounded hover:bg-slate-50 hover:border-slate-400 transition">
+                        class="py-2 w-9 text-center text-sm font-normal {{ $patients->currentPage() == $page ? 'text-white bg-blue-800 border border-blue-800 hover:bg-blue-700 hover:border-blue-700' : 'text-slate-500 bg-white border border-slate-200 hover:border-slate-400' }} rounded  transition">
                         {{ $page }}
                         </a>
                         @endfor
@@ -100,53 +100,64 @@
                     Add Patient</h2>
 
                 <!-- Form -->
-                <form class="space-y-2 px-4">
+                <form action="{{ route('patients.store') }}" method="POST" class="space-y-2 px-4">
+                    @csrf
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-sm font-medium text-gray-700">Firstname</label>
-                            <input type="text"
-                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none" />
+                            <input type="text" name="first_name" value="{{ old('first_name') }}"
+                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none"
+                                required />
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700">Middlename</label>
-                            <input type="text"
+                            <input type="text" name="middle_name" value="{{ old('middle_name') }}"
                                 class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none" />
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700">Lastname</label>
-                            <input type="text"
-                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none" />
+                            <input type="text" name="last_name" value="{{ old('last_name') }}"
+                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none"
+                                required />
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700">Contact #</label>
-                            <input type="text"
-                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none" />
+                            <input type="text" name="contact" {{ old('contact') }}
+                                class="w-full border border-gray-300 shadow rounded-md px-3 py-1.5 text-sm focus:outline-none"
+                                required />
                         </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="text-sm font-medium text-gray-700">Gender</label>
-                            <select
-                                class="w-full border rounded-md border-gray-300 shadow px-3 py-2 text-sm focus:outline-none">
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
+                           <select name="gender"
+    class="w-full border rounded-md border-gray-300 shadow px-3 py-2 text-sm focus:outline-none"
+    required>
+    <option value="">Select</option>
+    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+</select>
                         </div>
                         <div>
                             <label class="text-sm font-medium text-gray-700">Birthdate</label>
-                            <input type="date"
-                                class="w-full border border-gray-300 shadow rounded-md px-3 py-2 text-sm focus:outline-none" />
+                            <input type="date" name="birthdate"
+    value="{{ old('birthdate') }}"
+    class="w-full border border-gray-300 shadow rounded-md px-3 py-2 text-sm focus:outline-none"
+    required />
                         </div>
                     </div>
 
                     <div>
                         <label class="text-sm font-medium text-gray-700">Address</label>
-                        <textarea
-                            class="w-full border rounded-md border-gray-300 shadow px-3 py-2 text-sm focus:outline-none"
-                            rows="2"></textarea>
+                        <textarea name="address"
+    class="w-full border rounded-md border-gray-300 shadow px-3 py-2 text-sm focus:outline-none"
+    rows="2" required>{{ old('address') }}</textarea>
                     </div>
+                    @error('patient_exists')
+    <div class="text-sm text-red-500">{{ $message }}</div>
+@enderror
+
 
                     <!-- Buttons -->
                     <div class="flex border-t justify-end space-x-4 border-gray-300 -mx-4 px-4 py-4 pt-4">
@@ -160,11 +171,76 @@
                         </button>
                     </div>
                 </form>
+
             </div>
         </div>
     </x-slot:modal>
 
+  @if(session('success'))
+    @php
+        // detect if it's a delete message
+        $isDelete = str_contains(strtolower(session('success')), 'deleted');
+    @endphp
+
+    <div id="toast-success"
+        class="fixed top-5 right-5 z-50 flex items-center w-full max-w-xs p-4 py-3 text-gray-500 bg-white rounded-lg border 
+            {{ $isDelete ? 'border-red-200' : 'border-green-200' }}"
+        role="alert">
+
+        <div class="inline-flex items-center justify-center shrink-0 w-8 h-8 
+            {{ $isDelete ? 'text-red-500 bg-red-100' : 'text-green-500 bg-green-100' }} rounded-lg">
+
+            @if($isDelete)
+                <!-- Trash Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+</svg>
+
+            @else
+                <!-- Check Icon -->
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                     viewBox="0 0 20 20">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+            @endif
+        </div>
+
+        <div class="ms-3 text-sm font-medium text-gray-700">
+            {{ session('success') }}
+        </div>
+
+        <button type="button" onclick="document.getElementById('toast-success').remove()"
+            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5">
+            ✕
+        </button>
+    </div>
+@endif
+
+
+
+    @if($errors->has('patient_exists'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('patientModal').classList.remove('hidden');
+    });
+</script>
+@endif
+
+
     <script>
+
+       
+document.addEventListener('DOMContentLoaded', function () {
+    const toast = document.getElementById('toast-success');
+    if (toast) {
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+});
+
+        
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('search');
             const tableBody = document.getElementById('patients-table');
