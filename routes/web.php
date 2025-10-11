@@ -16,6 +16,17 @@ Route::middleware(['guest'])->group(function () {
     })->name('login');
 
     Route::post('/sign-in', [UserController::class, 'signIn'])->name('sign.in');
+
+    Route::get('/forgotpassword', [UserController::class, 'showForgotPassword'])->name('show-forgot-password');
+    Route::post('/forgotpassword', [UserController::class, 'forgotPassword'])->name('forgot-password');
+
+    Route::get('/verifyemail', [UserController::class, 'showVerifyEmail'])->name('show-verify-email');
+    Route::post('/verifyemail', [UserController::class, 'verifyEmail'])->name('verify-email');
+
+    Route::get('/newpassword', [UserController::class, 'showNewPassword'])->name('show-new-password');
+    Route::post('/newpassword', [UserController::class, 'newPassword'])->name('new-password');
+
+    Route::post('/resend-otp', [UserController::class, 'resendOtp'])->name('resend-otp');
 });
 
 Route::get('/', function () {

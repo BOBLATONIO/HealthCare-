@@ -76,7 +76,6 @@
                 <p class=" leading-4">Log Out</p>
             </button>
         </form>
-
     </div>
 
 
@@ -85,12 +84,12 @@
     <a href="{{ route('dashboard') }}" class="absolute bottom-4 px-6 right-0 flex justify-between items-center w-full">
         <div class="flex justify-center items-center  space-x-2">
             <div>
-                 @if(Auth::user()->profile_photo_base64)
-                    <img class="rounded-full h-10 w-10 object-cover" src="data:image/png;base64,{{ Auth::user()->profile_photo_base64 }}" alt="avatar" />
-                 @else
+                @if(Auth::user()->profile_photo_base64)
+                <img class="rounded-full h-10 w-10 object-cover" src="data:image/png;base64,{{ Auth::user()->profile_photo_base64 }}" alt="avatar" />
+                @else
                 <img class="rounded-full" src="https://i.ibb.co/L1LQtBm/Ellipse-1.png" alt="avatar" />
                 @endif
-                
+
             </div>
             <div class="flex justify-center flex-col items-start">
                 <p class="cursor-pointer font-semibold text-sm leading-5 text-white">{{ auth()->user()->name }}</p>

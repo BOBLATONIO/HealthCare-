@@ -9,20 +9,14 @@
         <div class=" w-full bg-white rounded-lg shadow  mt-5 s  max-w-sm">
             <div class="p-6 ">
                 <div>
-                    <h1 class="font-semibold w-full text-center mb-4 text-lg">Welcome to RuralCare+</h1>
+                    <h1 class="font-semibold w-full text-center mb-4 text-lg">Forgot password</h1>
                 </div>
-                <form method="POST" class="space-y-6" action="{{ route('sign.in') }}">
+                <form method="POST" class="space-y-6" action="{{ route('forgot-password') }}">
                     @csrf
                     @if(session('error'))
                     <div id="alertMessage"
                         class="transition-opacity duration-1000 text-start text-sm text-red-700 border w-full border-red-200 bg-red-100 px-4 py-2 rounded mb-3">
                         {{ session('error') }}
-                    </div>
-                    @endif
-                    @if(session('success'))
-                    <div id="alertMessage"
-                        class="transition-opacity duration-1000 text-start text-sm text-blue-700 border w-full border-blue-200 bg-blue-100 px-4 py-2 rounded mb-3">
-                        {{ session('success') }}
                     </div>
                     @endif
 
@@ -33,26 +27,18 @@
                             class="bg-white border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 "
                             placeholder="2039912@ruralcareplus.com" required="">
                     </div>
-                    <div>
-                        <label
-                            class="block mb-2 text-sm font-medium text-gray-900 ">Password</label>
-                        <input type="password" name="password" id="password" placeholder="••••••••"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5  "
-                            required="">
-                    </div>
                     <div class="flex items-center justify-between">
-                        <a href="{{ route('show-forgot-password') }}"
-                            class="text-sm font-medium text-primary-600 hover:underline">Forgot
-                            password?</a>
+                        <a href="{{ route('login') }}"
+                            class="text-sm font-medium text-primary-600 hover:underline">Continue with password.</a>
                     </div>
                     <button type="submit"
-                        class="w-full text-white bg-blue-800 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg  px-5 py-2.5 text-center ">Sign
-                        in</button>
+                        class="w-full text-white bg-blue-800 bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg  px-5 py-2.5 text-center ">Reset password</button>
                 </form>
             </div>
         </div>
     </div>
 
-    
-
+    <script>
+    sessionStorage.clear();
+</script>
 </x-authentication-layout>
